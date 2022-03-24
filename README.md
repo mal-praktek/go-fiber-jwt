@@ -1,2 +1,2 @@
-# go-fiber-project
-Kumpulan Golang project menggunakan framework Fiber.
+# go-fiber-jwt
+Golang project menggunakan framework Fiber dan sudah terkonfigurasi dengan JWT
