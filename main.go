@@ -1,20 +1,17 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/tegarsubkhan236/go-fiber-project/database"
+	"github.com/tegarsubkhan236/go-fiber-project/router"
+	"log"
+)
 
 func main() {
 	app := fiber.New()
+	database.ConnectDB()
 
-	app.Get("/", hallo)
-	app.Get("/:name", halloRandomName)
+	router.SetupRoutes(app)
 
-	app.Listen(":3000")
-}
-
-func hallo(c *fiber.Ctx) error {
-	return c.SendString("Hallo World")
-}
-
-func halloRandomName(c *fiber.Ctx) error {
-	return c.SendString("Hallo " + c.Params("name"))
+	log.Fatal(app.Listen(":4000"))
 }
