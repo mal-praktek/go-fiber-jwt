@@ -14,7 +14,14 @@ func GetAllProducts(c *fiber.Ctx) error {
 }
 
 func GetProduct(c *fiber.Ctx) error {
-	return c.SendStatus(404)
+	id := c.Params("id")
+	db := database.DB
+	var product model.Product
+	db.Find($product, id)
+	if product.Title == "" {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "No product find with ID", "data": nil})
+	}
+	return c.JSON(fiber.Map{"status": "success", "message": "Product Found", "data": product})
 }
 
 func CreateProduct(c *fiber.Ctx) error {

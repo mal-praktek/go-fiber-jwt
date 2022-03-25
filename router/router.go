@@ -24,11 +24,11 @@ func SetupRoutes(app *fiber.App) {
 	user.Delete("/:id", hallo)
 
 	// product
-	product := app.Group("/product")
+	product := app.Group("/product", middleware.Protected())
 	product.Get("/", handler.GetAllProducts)
-	product.Get("/:id", hallo)
-	product.Post("/", middleware.Protected(), hallo)
-	product.Delete("/:id", middleware.Protected(), hallo)
+	product.Get("/:id", handler.GetProduct)
+	product.Post("/", hallo)
+	product.Delete("/:id", hallo)
 }
 
 func hallo(c *fiber.Ctx) error {

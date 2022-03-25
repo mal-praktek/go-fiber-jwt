@@ -1,45 +1,12 @@
 package handler
 
 import (
-	"errors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/tegarsubkhan236/go-fiber-project/config"
-	"github.com/tegarsubkhan236/go-fiber-project/database"
 	"github.com/tegarsubkhan236/go-fiber-project/model"
-	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 	"time"
 )
-
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
-}
-
-func getUserByEmail(e string) (*model.User, error) {
-	db := database.DB
-	var user model.User
-	if err := db.Where(&model.User{Email: e}).Find(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-		return nil, err
-	}
-	return &user, nil
-}
-
-func getUserByUsername(u string) (*model.User, error) {
-	db := database.DB
-	var user model.User
-	if err := db.Where(&model.User{Username: u}).Find(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-		return nil, err
-	}
-	return &user, nil
-}
 
 // Login get user and password
 func Login(c *fiber.Ctx) error {
@@ -62,12 +29,12 @@ func Login(c *fiber.Ctx) error {
 	identity := input.Identity
 	pass := input.Password
 
-	email, err := getUserByEmail(identity)
+	email, err := model.GetUserByEmail(identity)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Error on email", "data": err})
 	}
 
-	user, err := getUserByUsername(identity)
+	user, err := model.GetUserByUsername(identity)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Error on username", "data": err})
 	}
@@ -94,7 +61,7 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
 	}
 
-	if !CheckPasswordHash(pass, ud.Password) {
+	if !model.CheckPasswordHash(pass, ud.Password) {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
 	}
 
@@ -103,7 +70,7 @@ func Login(c *fiber.Ctx) error {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = ud.Username
 	claims["user_id"] = ud.ID
-	claims["exp"] = time.Now().Add(time.Second * 30).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
 
 	t, err := token.SignedString([]byte(config.Config("SECRET")))
 	if err != nil {
