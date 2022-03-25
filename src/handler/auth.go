@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/tegarsubkhan236/go-fiber-project/config"
-	"github.com/tegarsubkhan236/go-fiber-project/model"
+	"github.com/tegarsubkhan236/go-fiber-project/src/model"
 	"time"
 )
 

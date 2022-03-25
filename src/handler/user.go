@@ -3,8 +3,8 @@ package handler
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/tegarsubkhan236/go-fiber-project/database"
-	"github.com/tegarsubkhan236/go-fiber-project/model"
+	"github.com/tegarsubkhan236/go-fiber-project/config/database"
+	"github.com/tegarsubkhan236/go-fiber-project/src/model"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
 )

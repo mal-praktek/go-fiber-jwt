@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/tegarsubkhan236/go-fiber-project/database"
+	"github.com/tegarsubkhan236/go-fiber-project/config/database"
 	"github.com/tegarsubkhan236/go-fiber-project/router"
 	"log"
 )

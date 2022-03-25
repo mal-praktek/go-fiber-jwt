@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 	"github.com/tegarsubkhan236/go-fiber-project/config"
-	"github.com/tegarsubkhan236/go-fiber-project/model"
+	model2 "github.com/tegarsubkhan236/go-fiber-project/src/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"strconv"
@@ -18,8 +18,11 @@ func ConnectDB() {
 		panic("can't connect to database")
 	}
 	fmt.Println("Connection success")
-	DB.AutoMigrate(
-		&model.User{},
-		&model.Product{},
+	err = DB.AutoMigrate(
+		&model2.User{},
+		&model2.Product{},
 	)
+	if err != nil {
+		fmt.Println("Table failed to generate")
+	}
 }

@@ -2,7 +2,7 @@ package model
 
 import (
 	"errors"
-	"github.com/tegarsubkhan236/go-fiber-project/database"
+	"github.com/tegarsubkhan236/go-fiber-project/config/database"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
