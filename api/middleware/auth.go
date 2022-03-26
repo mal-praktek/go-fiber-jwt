@@ -1,9 +1,9 @@
 package middleware
 
 import (
+	"example/pkg/config"
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v2"
-	"github.com/tegarsubkhan236/go-fiber-project/config"
 )
 
 func Protected() fiber.Handler {

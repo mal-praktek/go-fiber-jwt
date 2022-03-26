@@ -1,15 +1,15 @@
 package main
 
 import (
+	"example/api/router"
+	"example/pkg/config"
 	"github.com/gofiber/fiber/v2"
-	"github.com/tegarsubkhan236/go-fiber-project/database"
-	"github.com/tegarsubkhan236/go-fiber-project/router"
 	"log"
 )
 
 func main() {
 	app := fiber.New()
-	database.ConnectDB()
+	config.ConnectDB()
 
 	router.SetupRoutes(app)
 

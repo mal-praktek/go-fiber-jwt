@@ -1,10 +1,10 @@
-package handler
+package controller
 
 import (
+	"example/api/service"
+	"example/pkg/config"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/tegarsubkhan236/go-fiber-project/config"
-	"github.com/tegarsubkhan236/go-fiber-project/model"
 	"time"
 )
 
@@ -24,23 +24,38 @@ func Login(c *fiber.Ctx) error {
 	var ud UserData
 
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Error on login request",
+			"data":    err,
+		})
 	}
 	identity := input.Identity
 	pass := input.Password
 
-	email, err := model.GetUserByEmail(identity)
+	email, err := service.GetUserByEmail(identity)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Error on email", "data": err})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Error on email",
+			"data":    err,
+		})
 	}
 
-	user, err := model.GetUserByUsername(identity)
+	user, err := service.GetUserByUsername(identity)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Error on username", "data": err})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Error on username",
+			"data":    err,
+		})
 	}
 
 	if email == nil && user == nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "User not found", "data": err})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  "error",
+			"message": "User not found",
+			"data":    err})
 	}
 
 	if email.ID != 0 {
@@ -58,11 +73,19 @@ func Login(c *fiber.Ctx) error {
 			Password: user.Password,
 		}
 	} else {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "User not found",
+			"data":    nil,
+		})
 	}
 
-	if !model.CheckPasswordHash(pass, ud.Password) {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
+	if !service.CheckPasswordHash(pass, ud.Password) {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Invalid password",
+			"data":    nil,
+		})
 	}
 
 	token := jwt.New(jwt.SigningMethodHS256)

@@ -1,32 +1,32 @@
 package router
 
 import (
+	"example/api/controller"
+	"example/api/middleware"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/tegarsubkhan236/go-fiber-project/handler"
-	"github.com/tegarsubkhan236/go-fiber-project/middleware"
 )
 
 func SetupRoutes(app *fiber.App) {
-	// middleware
+	// /api
 	api := app.Group("/api", logger.New())
-	api.Get("/", handler.Hello)
+	api.Get("/", hallo)
 
-	// auth
+	// /auth
 	auth := app.Group("/auth")
-	auth.Post("/login", handler.Login)
+	auth.Post("/login", controller.Login)
 
-	// user
+	// /user
 	user := app.Group("/user")
-	user.Get("/list/:id", handler.GetUser)
-	user.Post("/", handler.CreateUser)
+	user.Get("/list/:id", controller.GetUser)
+	user.Post("/", controller.CreateUser)
 	user.Put("/:id", hallo)
 	user.Delete("/:id", hallo)
 
-	// product
+	// /product
 	product := app.Group("/product", middleware.Protected())
-	product.Get("/", handler.GetAllProducts)
-	product.Get("/:id", handler.GetProduct)
+	product.Get("/", controller.GetAllProducts)
+	product.Get("/:id", controller.GetProduct)
 	product.Post("/", hallo)
 	product.Delete("/:id", hallo)
 }
